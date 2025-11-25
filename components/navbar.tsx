@@ -27,7 +27,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = Array.from(document.querySelectorAll("section"))
+      const sections = Array.from(document.querySelectorAll("section, footer")) as HTMLElement[]
       const scrollPosition = window.scrollY + 100
 
       let currentColor = "#ffffff" // Por defecto blanco
@@ -44,6 +44,8 @@ export default function Navbar() {
             // Índice 2: Por qué elegir (blanco)
             // Índice 3: Para qué invertir (azul)
             // Índice 4: Conoce tu perfil (blanco)
+            // Índice 5: Footer (azul - fondo blanco)
+            // Índice 6: Giant Logo (azul - fondo blanco)
             
             if (index === 0 || index === 2 || index === 4) {
               currentColor = "#ffffff"
@@ -105,9 +107,9 @@ export default function Navbar() {
   ]
 
   const socialItems = [
-    { label: "LinkedIn", link: "https://linkedin.com" },
-    { label: "Twitter", link: "https://twitter.com" },
-    { label: "Instagram", link: "https://instagram.com" },
+    { label: "LinkedIn", link: "https://www.linkedin.com/company/boston-asset-manager/posts/?feedView=all" },
+    { label: "Twitter", link: "https://x.com/AssetBoston" },
+    { label: "Instagram", link: "https://www.instagram.com/bostonassetmanager/" },
   ]
 
   return (

@@ -5,6 +5,7 @@ import BenefitsSection from "@/components/sections/benefits-section"
 import WhyChooseSection from "@/components/sections/why-choose-section"
 import CtaSection from "@/components/sections/cta-section"
 import Footer from "@/components/footer"
+import GiantLogoSection from "@/components/sections/giant-logo-section"
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <WhyChooseSection />
       <CtaSection />
       <Footer />
+      <GiantLogoSection />
     </main>
   )
 }

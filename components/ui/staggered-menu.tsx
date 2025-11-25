@@ -120,7 +120,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
     return () => ctx.revert();
-  }, [menuButtonColor, position]);
+  }, [position]);
 
   const buildOpenTimeline = useCallback(() => {
     const panel = panelRef.current;
@@ -543,6 +543,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="sm-socials-link text-[1.2rem] font-medium text-[#111] no-underline relative inline-block py-[2px] transition-[color,opacity] duration-300 ease-linear"
+                        style={{ pointerEvents: 'auto' }}
                       >
                         {s.label}
                       </a>
@@ -577,7 +578,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
 .sm-scope .sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; transform: translateX(0); }
 .sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
-.sm-scope .sm-socials { margin-top: auto; padding-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.sm-scope .sm-socials { margin-top: 0; padding-top: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .sm-scope .sm-socials-title { margin: 0; font-size: 1rem; font-weight: 500; color: var(--sm-accent, #ff0000); }
 .sm-scope .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .sm-scope .sm-socials-list .sm-socials-link { opacity: 1; transition: opacity 0.3s ease; }

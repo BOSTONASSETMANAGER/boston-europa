@@ -30,6 +30,27 @@ export default function PageLoader() {
     }
   }, [])
 
+  useEffect(() => {
+    const handleOpenSelector = () => {
+      setShowCountrySelector(true)
+      // Reset selectedLanguage to null temporarily to force show if needed, 
+      // or just relying on showCountrySelector && !selectedLanguage logic might be tricky 
+      // if selectedLanguage is already set. 
+      // Let's change the condition in the render to show if showCountrySelector is true, regardless of selectedLanguage?
+      // Or better, we just set showCountrySelector to true. 
+      // But wait, line 98 says: {showCountrySelector && !selectedLanguage && (
+      // So if selectedLanguage IS set, it won't show. 
+      // We should probably temporarily clear selectedLanguage or change the render condition.
+      // Let's modify the render condition in a separate edit or just unset selectedLanguage here?
+      // If we unset selectedLanguage, it might trigger other effects if any.
+      // Let's try forcing it by clearing selectedLanguage.
+      setSelectedLanguage(null)
+    }
+
+    window.addEventListener('open-country-selector', handleOpenSelector)
+    return () => window.removeEventListener('open-country-selector', handleOpenSelector)
+  }, [])
+
   const handleCountrySelect = (language: string) => {
     setSelectedLanguage(language)
     // Guardar en sessionStorage para esta sesión

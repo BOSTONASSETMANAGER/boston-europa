@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useTranslation } from "react-i18next"
 import { WordRotate } from "./word-rotate"
@@ -50,19 +50,58 @@ export default function CountrySelector({ onSelect }: { onSelect: (language: str
     }, 500)
   }
 
+  useEffect(() => {
+    const scriptUrl = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.35/dist/unicornStudio.umd.js"
+    
+    // Check if script is already present
+    if (document.querySelector(`script[src="${scriptUrl}"]`)) {
+      // @ts-ignore
+      if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
+         // @ts-ignore
+         UnicornStudio.init()
+         // @ts-ignore
+         window.UnicornStudio.isInitialized = true
+      }
+      return
+    }
+
+    const script = document.createElement("script")
+    script.src = scriptUrl
+    script.async = true
+    script.onload = function() {
+      // @ts-ignore
+      if (!window.UnicornStudio.isInitialized) {
+        // @ts-ignore
+        UnicornStudio.init()
+        // @ts-ignore
+        window.UnicornStudio.isInitialized = true
+      }
+    }
+    document.head.appendChild(script)
+
+    return () => {
+      // Optional: cleanup if needed, but usually scripts stay
+    }
+  }, [])
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="fixed inset-0 z-[9999] flex items-center justify-center"
+        className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, var(--saas-primary), var(--saas-accent))",
+          background: "black", // Fallback
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="text-center max-w-5xl px-4">
+        {/* Unicorn Studio Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+           <div data-us-project="7KWfZDdazgHxIcuwvQlG"></div>
+        </div>
+        
+        <div className="text-center max-w-5xl px-4 relative z-10">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}

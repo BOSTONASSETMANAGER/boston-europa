@@ -264,6 +264,37 @@ const resources = {
       "investments.bonds.benefit2": "Menor volatilidad",
       "investments.bonds.benefit3": "Diferentes plazos disponibles",
       "investments.bonds.benefit4": "Ideal para perfiles conservadores",
+      
+      // Footer
+      "footer": {
+        "description": "Institución de asesoramiento financiero autorizada por FINRA y SEC.",
+        "companyTitle": "Empresa",
+        "companyItems": [],
+        "usefulTitle": "Enlaces útiles",
+        "usefulItems": [
+          { "label": "La empresa", "href": "/laempresa" },
+          { "label": "Contacto", "href": "/contacto" },
+          { "label": "Privacidad", "href": "#" },
+          { "label": "Bolsa de Madrid", "href": "#" },
+          { "label": "Banco de España", "href": "#" },
+          { "label": "Política de cookies", "href": "#" },
+          { "label": "Cambiar país", "href": "#change-country" }
+        ],
+        "networksTitle": "Redes sociales",
+        "socialLinks": [
+          { "label": "Email", "href": "mailto:info@bostonam.es" },
+          { "label": "Facebook", "href": "https://www.facebook.com/Boston-Asset-Manager-Espa%C3%B1a-103006599192497/" },
+          { "label": "Instagram", "href": "https://www.instagram.com/bostonassetmanager_es" },
+          { "label": "LinkedIn", "href": "https://www.linkedin.com/company/boston-asset-manager/" },
+          { "label": "Telegram", "href": "https://t.me/ASSETBOSTON" },
+          { "label": "Threads", "href": "https://www.threads.net/@bostonassetmanager_es" },
+          { "label": "Twitter", "href": "https://twitter.com/assetboston_es" },
+          { "label": "WhatsApp", "href": "https://wa.me/+5491173643465" }
+        ],
+        "legal": "Sociedad de asesoramiento financiero autorizada por FINRA en los Estados Unidos bajo el número 310985.",
+        "address": "P.º de la Castellana, 77, 28046 Madrid, España",
+        "copyright": "Copyright © 2017-2025 Boston Asset Manager. All Rights Reserved."
+      }
     }
   },
   it: {
@@ -506,6 +537,37 @@ const resources = {
       "investments.bonds.benefit2": "Minore volatilità",
       "investments.bonds.benefit3": "Diversi termini disponibili",
       "investments.bonds.benefit4": "Ideale per profili conservatori",
+      
+      // Footer
+      "footer": {
+        "description": "Societá di consulenza finanziera autorizzata per FINRA a gli stati uniti sotto il numero 310985.",
+        "companyTitle": "L’azienda",
+        "companyItems": [],
+        "usefulTitle": "Link utili",
+        "usefulItems": [
+          { "label": "L’azienda", "href": "/laempresa" },
+          { "label": "Informativa sulla privacy", "href": "/informativa-privacy" },
+          { "label": "Gestione dei Cookie", "href": "/gestione-cookie" },
+          { "label": "Borsa Italiana", "href": "https://www.borsaitaliana.it/" },
+          { "label": "Dati Sociali", "href": "https://bostonam.it/dati-sociali/" },
+          { "label": "Listino Ufficiale", "href": "https://www.borsaitaliana.it/listino-ufficiale.htm" },
+          { "label": "Cambia paese", "href": "#change-country" }
+        ],
+        "networksTitle": "Le nostre reti",
+        "socialLinks": [
+          { "label": "Email", "href": "mailto:info@bostonam.it" },
+          { "label": "Facebook", "href": "https://www.facebook.com/Boston-Asset-Manager-Italia-107632108701909" },
+          { "label": "Instagram", "href": "https://www.instagram.com/bostonassetmanager_it" },
+          { "label": "LinkedIn", "href": "https://www.linkedin.com/company/boston-asset-manager/" },
+          { "label": "Telegram", "href": "https://t.me/ASSETBOSTON" },
+          { "label": "Threads", "href": "https://www.threads.net/@bostonassetmanager_it" },
+          { "label": "Twitter", "href": "https://twitter.com/assetboston_it" },
+          { "label": "WhatsApp", "href": "https://wa.me/+5491173643465" }
+        ],
+        "legal": "Societá di consulenza finanziera autorizzata per FINRA a gli stati uniti sotto il numero 310985. Gli azioniste limitano la sua responsabilitá al capitale aportato.",
+        "address": "Via Meravigli, 2, 20123 Milano MI, Italy",
+        "copyright": "Copyright 2017-2025 Boston Asset Manager"
+      }
     }
   },
   de: {
@@ -748,6 +810,37 @@ const resources = {
       "investments.bonds.benefit2": "Geringere Volatilität",
       "investments.bonds.benefit3": "Verschiedene verfügbare Laufzeiten",
       "investments.bonds.benefit4": "Ideal für konservative Profile",
+      
+      // Footer
+      "footer": {
+        "description": "Finanzberatungsunternehmen, das von der FINRA in den USA unter der Nummer 310985 zugelassen ist.",
+        "companyTitle": "Das Unternehmen",
+        "companyItems": [],
+        "usefulTitle": "Nützliche Links",
+        "usefulItems": [
+          { "label": "Das Unternehmen", "href": "/laempresa" },
+          { "label": "Datenschutz-Bestimmungen", "href": "/datenschutz" },
+          { "label": "Cookie-Richtlinie", "href": "/cookie-richtlinie" },
+          { "label": "Frankfurter Wertpapierbörse", "href": "https://www.boerse-frankfurt.de/" },
+          { "label": "Deutsche Bundesbank", "href": "https://www.bundesbank.de/en" },
+          { "label": "Bundesministerium der Finanzen", "href": "https://www.bundesfinanzministerium.de/Web/DE/Home/home.html" },
+          { "label": "BaFin", "href": "https://www.bafin.de/EN/Homepage/homepage_node.html" },
+          { "label": "Land auswählen", "href": "#change-country" }
+        ],
+        "networksTitle": "Unsere Netzwerke",
+        "socialLinks": [
+          { "label": "Email", "href": "mailto:info@bostonam.de" },
+          { "label": "Facebook", "href": "https://www.facebook.com/Boston-Asset-Manager-Deutschland-102189192590446" },
+          { "label": "LinkedIn", "href": "https://www.linkedin.com/company/boston-asset-manager/" },
+          { "label": "Telegram", "href": "https://t.me/ASSETBOSTON" },
+          { "label": "Threads", "href": "https://www.threads.net/@bostonassetmanager_de" },
+          { "label": "Twitter", "href": "https://twitter.com/assetboston_de" },
+          { "label": "WhatsApp", "href": "https://wa.me/+5491173643465" }
+        ],
+        "legal": "Finanzberatungsunternehmen, das von der FINRA in den USA unter der Nummer 310985 zugelassen ist. Die Aktionäre beschränken ihre Haftung auf das eingezahlte Kapital.",
+        "address": "Neue Rothofstraße 13-19, 60313 Frankfurt am Main, Deutschland",
+        "copyright": "Copyright 2017-2025 Boston Asset Managers"
+      }
     }
   },
   fr: {
@@ -990,6 +1083,38 @@ const resources = {
       "investments.bonds.benefit2": "Volatilité moindre",
       "investments.bonds.benefit3": "Différentes échéances disponibles",
       "investments.bonds.benefit4": "Idéal pour les profils conservateurs",
+      
+      // Footer
+      "footer": {
+        "description": "Société de conseil financier agréée par la FINRA aux Etats-Unis sous le numéro 310985.",
+        "companyTitle": "L’enterprise",
+        "companyItems": [],
+        "usefulTitle": "Liens utiles",
+        "usefulItems": [
+          { "label": "L’enterprise", "href": "/laempresa" },
+          { "label": "Politique de confidentialité", "href": "/politique-confidentialite" },
+          { "label": "Politique relative aux cookies", "href": "/politique-cookies" },
+          { "label": "Banque de France", "href": "https://www.banque-france.fr/" },
+          { "label": "Ministére de l’économie", "href": "https://www.economie.gouv.fr/" },
+          { "label": "Autorité des marchés financiers", "href": "https://www.amf-france.org/" },
+          { "label": "Cote Officielle", "href": "https://live.euronext.com/en" },
+          { "label": "Changer de pays", "href": "#change-country" }
+        ],
+        "networksTitle": "Nos réseaux",
+        "socialLinks": [
+          { "label": "Email", "href": "mailto:info@bostonam.fr" },
+          { "label": "Facebook", "href": "https://www.facebook.com/Boston-Asset-Manager-France-110065568455152" },
+          { "label": "Instagram", "href": "https://www.instagram.com/bostonassetmanager_fr" },
+          { "label": "LinkedIn", "href": "https://www.linkedin.com/company/boston-asset-manager/" },
+          { "label": "Telegram", "href": "https://t.me/ASSETBOSTON" },
+          { "label": "Threads", "href": "https://www.threads.net/@bostonassetmanager_fr" },
+          { "label": "Twitter", "href": "https://twitter.com/assetboston_fr" },
+          { "label": "WhatsApp", "href": "https://wa.me/+5491173643465" }
+        ],
+        "legal": "Société de conseil financier agréée par la FINRA aux Etats-Unis sous le numéro 310985. Les actionnaires limitent sa responsabilité au capital apporté.",
+        "address": "Coeur Marais, 64-66 Rue des Archives, 75003 Paris, France",
+        "copyright": "Copyright 2017-2025 Boston Asset Manager"
+      }
     }
   },
   sv: {
@@ -1232,6 +1357,36 @@ const resources = {
       "investments.bonds.benefit2": "Lägre volatilitet",
       "investments.bonds.benefit3": "Olika tillgängliga löptider",
       "investments.bonds.benefit4": "Idealiskt för konservativa profiler",
+      
+      // Footer
+      "footer": {
+        "description": "Finansiellt rådgivningsföretag auktoriserat av FINRA i USA under nummer 310985.",
+        "companyTitle": "Företaget",
+        "companyItems": [],
+        "usefulTitle": "Användbara länkar",
+        "usefulItems": [
+          { "label": "Företaget", "href": "/laempresa" },
+          { "label": "Integritet", "href": "/integritet" },
+          { "label": "Cookies policy", "href": "/cookies-policy" },
+          { "label": "Sveriges Riksbank", "href": "https://www.riksbank.se/" },
+          { "label": "OMX NASDAQ NORDIC", "href": "https://www.nasdaq.com/european-market-activity" },
+          { "label": "Ändra land", "href": "#change-country" }
+        ],
+        "networksTitle": "Våra nätverk",
+        "socialLinks": [
+          { "label": "Email", "href": "mailto:info@bostonam.se" },
+          { "label": "Facebook", "href": "https://www.facebook.com/Boston-Asset-Manager-Sverige-112239364929063" },
+          { "label": "Instagram", "href": "https://www.instagram.com/bostonassetmanager_se" },
+          { "label": "LinkedIn", "href": "https://www.linkedin.com/company/boston-asset-manager/" },
+          { "label": "Telegram", "href": "https://t.me/ASSETBOSTON" },
+          { "label": "Threads", "href": "https://www.threads.net/@bostonassetmanager_SE" },
+          { "label": "Twitter", "href": "https://twitter.com/assetboston_se" },
+          { "label": "WhatsApp", "href": "https://wa.me/+5491173643465" }
+        ],
+        "legal": "Finansiellt rådgivningsföretag auktoriserat av FINRA i USA under nummer 310985. Aktieägarna begränsar sitt ansvar till det tillskjutna kapitalet.",
+        "address": "Regeringsgatan 29, 111 53 Stockholm, Sweden",
+        "copyright": "Copyright 2017-2025 Boston Asset Manager"
+      }
     }
   }
 }

@@ -227,3 +227,24 @@
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari y Opera */
 }
+
+/* Unicorn Studio Badge Removal */
+a[href*="unicorn.studio"] {
+  display: none !important;
+}
+
+/* Unicorn Studio Full Screen Fix */
+[data-us-project] {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+}
+
+[data-us-project] canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
