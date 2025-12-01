@@ -106,6 +106,9 @@ export default function HeroSection() {
           {t('hero.subtitle')}
         </p>
         <button
+          onClick={() => {
+            document.getElementById('steps-section')?.scrollIntoView({ behavior: 'smooth' })
+          }}
           className="text-white font-bold py-3 px-8 rounded-lg transition-all hover:-translate-y-1"
           style={{
             background: "white",

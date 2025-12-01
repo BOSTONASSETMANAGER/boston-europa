@@ -64,6 +64,7 @@ export default function StepsSection() {
 
   return (
     <section
+      id="steps-section"
       ref={sectionRef}
       className="sticky top-0 z-10 bg-white -mt-[3rem] rounded-t-[3rem] min-h-screen flex items-center justify-center overflow-hidden py-20"
       style={{ 

@@ -6,18 +6,6 @@ export default function AbrirCuentaHero() {
   const { t } = useTranslation()
   return (
     <section className="relative min-h-[400px] py-20 overflow-hidden w-full bg-gradient-to-br from-[#1d3969] to-[#2563eb]">
-      {/* Video background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        crossOrigin="anonymous"
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        src="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com/10081.mp4"
-      />
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40 z-[1]" />
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
         <div className="text-center animate-[fadeInDown_0.8s_ease-out]">
