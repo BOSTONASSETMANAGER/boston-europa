@@ -49,10 +49,10 @@ export const metadata: Metadata = {
     description: "Con Boston Asset Manager, invertir es más fácil que nunca. Accede a mercados de capitales con asesoramiento experto.",
     images: [
       {
-        url: "https://bostonam.ar/wp-content/uploads/2023/03/LOGOWEBSITE-e1680142400144.png",
+        url: "https://bostonam.eu/BANNER-METADATA.jpg",
         width: 1200,
         height: 630,
-        alt: "Boston Asset Manager",
+        alt: "Boston Asset Manager - Inversiones en Europa",
       },
     ],
   },
@@ -60,7 +60,18 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Boston Asset Manager | Empezá a invertir en solo 3 pasos",
     description: "Con Boston Asset Manager, invertir es más fácil que nunca. Accede a mercados de capitales con asesoramiento experto.",
-    images: ["https://bostonam.ar/wp-content/uploads/2023/03/LOGOWEBSITE-e1680142400144.png"],
+    images: [
+      {
+        url: "https://bostonam.eu/BANNER-METADATA-600x315.jpg",
+        width: 600,
+        height: 315,
+        alt: "Boston Asset Manager - Inversiones en Europa",
+      },
+    ],
+  },
+  other: {
+    "og:image:width": "1200",
+    "og:image:height": "630",
   },
   verification: {
     google: "tu-codigo-de-verificacion-google",
