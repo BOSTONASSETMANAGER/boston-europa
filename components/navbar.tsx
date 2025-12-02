@@ -112,6 +112,9 @@ export default function Navbar() {
     { label: "Instagram", link: "https://www.instagram.com/bostonassetmanager/" },
   ]
 
+  // Determinar variante del logo basado en el color del menú
+  const logoVariant = menuColor === "#ffffff" ? "light" : "dark"
+
   return (
     <StaggeredMenu
       position="right"
@@ -127,7 +130,9 @@ export default function Navbar() {
       openMenuButtonColor="#1d3969"
       changeMenuColorOnOpen={true}
       colors={["#1d3969", "#2563eb"]}
-      logoUrl="https://bostonam.ar/wp-content/uploads/2023/03/LOGOWEBSITE-e1680142400144.png"
+      logoUrlLight="/boston blanco.png"
+      logoUrlDark="/boston azul.png"
+      currentLogoVariant={logoVariant}
       accentColor="#2563eb"
       isFixed={true}
       onMenuOpen={() => console.log("Menu opened")}

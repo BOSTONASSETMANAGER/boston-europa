@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion } from "motion/react";
+import { useRef, useState } from "react";
+import { motion, useInView } from "motion/react";
 import DottedMap from "dotted-map";
 
 import { useTheme } from "next-themes";
@@ -19,6 +19,8 @@ export function WorldMap({
   lineColor = "#0ea5e9",
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const map = new DottedMap({ height: 100, grid: "diagonal" });
 
   const { theme } = useTheme();
@@ -46,7 +48,7 @@ export function WorldMap({
   };
 
   return (
-    <div className="w-full aspect-[2/1] bg-transparent rounded-lg relative font-sans">
+    <div ref={containerRef} className="w-full aspect-[2/1] bg-transparent rounded-lg relative font-sans">
       <img
         src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
         className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none opacity-70"
@@ -72,13 +74,18 @@ export function WorldMap({
                 strokeWidth="1"
                 initial={{
                   pathLength: 0,
+                  opacity: 0,
                 }}
-                animate={{
+                animate={isInView ? {
                   pathLength: 1,
+                  opacity: 1,
+                } : {
+                  pathLength: 0,
+                  opacity: 0,
                 }}
                 transition={{
-                  duration: 1,
-                  delay: 0.5 * i,
+                  duration: 1.2,
+                  delay: 0.3 * i,
                   ease: "easeOut",
                 }}
                 key={`start-upper-${i}`}
@@ -97,70 +104,80 @@ export function WorldMap({
         </defs>
 
         {dots.map((dot, i) => (
-          <g key={`points-group-${i}`}>
+          <g key={`points-group-${i}`} style={{ opacity: isInView ? 1 : 0, transition: `opacity 0.5s ease ${0.3 * i + 0.5}s` }}>
             <g key={`start-${i}`}>
-              <circle
+              <motion.circle
                 cx={projectPoint(dot.start.lat, dot.start.lng).x}
                 cy={projectPoint(dot.start.lat, dot.start.lng).y}
                 r="2"
                 fill={lineColor}
+                initial={{ scale: 0 }}
+                animate={isInView ? { scale: 1 } : { scale: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 * i + 0.3 }}
               />
-              <circle
-                cx={projectPoint(dot.start.lat, dot.start.lng).x}
-                cy={projectPoint(dot.start.lat, dot.start.lng).y}
-                r="2"
-                fill={lineColor}
-                opacity="0.5"
-              >
-                <animate
-                  attributeName="r"
-                  from="2"
-                  to="8"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  from="0.5"
-                  to="0"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-              </circle>
+              {isInView && (
+                <circle
+                  cx={projectPoint(dot.start.lat, dot.start.lng).x}
+                  cy={projectPoint(dot.start.lat, dot.start.lng).y}
+                  r="2"
+                  fill={lineColor}
+                  opacity="0.5"
+                >
+                  <animate
+                    attributeName="r"
+                    from="2"
+                    to="8"
+                    dur="1.5s"
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur="1.5s"
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              )}
             </g>
             <g key={`end-${i}`}>
-              <circle
+              <motion.circle
                 cx={projectPoint(dot.end.lat, dot.end.lng).x}
                 cy={projectPoint(dot.end.lat, dot.end.lng).y}
                 r="2"
                 fill={lineColor}
+                initial={{ scale: 0 }}
+                animate={isInView ? { scale: 1 } : { scale: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 * i + 0.8 }}
               />
-              <circle
-                cx={projectPoint(dot.end.lat, dot.end.lng).x}
-                cy={projectPoint(dot.end.lat, dot.end.lng).y}
-                r="2"
-                fill={lineColor}
-                opacity="0.5"
-              >
-                <animate
-                  attributeName="r"
-                  from="2"
-                  to="8"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="opacity"
-                  from="0.5"
-                  to="0"
-                  dur="1.5s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                />
-              </circle>
+              {isInView && (
+                <circle
+                  cx={projectPoint(dot.end.lat, dot.end.lng).x}
+                  cy={projectPoint(dot.end.lat, dot.end.lng).y}
+                  r="2"
+                  fill={lineColor}
+                  opacity="0.5"
+                >
+                  <animate
+                    attributeName="r"
+                    from="2"
+                    to="8"
+                    dur="1.5s"
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    from="0.5"
+                    to="0"
+                    dur="1.5s"
+                    begin="0s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              )}
             </g>
           </g>
         ))}

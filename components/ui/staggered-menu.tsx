@@ -34,6 +34,9 @@ export interface StaggeredMenuProps {
   displayItemNumbering?: boolean;
   className?: string;
   logoUrl?: string;
+  logoUrlLight?: string;
+  logoUrlDark?: string;
+  currentLogoVariant?: 'light' | 'dark';
   menuButtonColor?: string;
   openMenuButtonColor?: string;
   accentColor?: string;
@@ -56,6 +59,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   displayItemNumbering = true,
   className,
   logoUrl = '/logo.svg',
+  logoUrlLight,
+  logoUrlDark,
+  currentLogoVariant = 'light',
   menuButtonColor = '#fff',
   openMenuButtonColor = '#fff',
   changeMenuColorOnOpen = true,
@@ -398,16 +404,37 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           className="staggered-menu-header absolute top-0 left-0 w-full flex items-center justify-between p-[2em] bg-transparent pointer-events-none z-20"
           aria-label="Main navigation header"
         >
-          <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-            <img
-              src={logoUrl || '/logo.svg'}
-              alt="Logo"
-              className="sm-logo-img block h-12 w-auto object-contain"
-              draggable={false}
-              width={110}
-              height={24}
-            />
-          </div>
+          <Link href="/" className="sm-logo flex items-center select-none pointer-events-auto relative transition-transform duration-300 ease-out hover:scale-110" aria-label="Ir al inicio">
+            {logoUrlLight && logoUrlDark ? (
+              <>
+                <img
+                  src={logoUrlLight}
+                  alt="Logo"
+                  className={`sm-logo-img relative z-10 block h-12 w-auto object-contain cursor-pointer transition-opacity duration-300 ${currentLogoVariant === 'light' ? 'opacity-100' : 'opacity-0 absolute'}`}
+                  draggable={false}
+                  width={110}
+                  height={24}
+                />
+                <img
+                  src={logoUrlDark}
+                  alt="Logo"
+                  className={`sm-logo-img relative z-10 block h-12 w-auto object-contain cursor-pointer transition-opacity duration-300 ${currentLogoVariant === 'dark' ? 'opacity-100' : 'opacity-0 absolute'}`}
+                  draggable={false}
+                  width={110}
+                  height={24}
+                />
+              </>
+            ) : (
+              <img
+                src={logoUrl || '/logo.svg'}
+                alt="Logo"
+                className="sm-logo-img relative z-10 block h-12 w-auto object-contain cursor-pointer"
+                draggable={false}
+                width={110}
+                height={24}
+              />
+            )}
+          </Link>
 
           <button
             ref={toggleBtnRef}

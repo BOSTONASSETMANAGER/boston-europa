@@ -7,6 +7,7 @@ export default function WorldMapDemo() {
     <div className="py-20 w-full">
       <WorldMap
         dots={[
+          // Conexiones europeas
           {
             start: { lat: 52.5200, lng: 13.4050 }, // Berlín, Alemania
             end: { lat: 40.4168, lng: -3.7038 }, // Madrid, España
@@ -26,6 +27,21 @@ export default function WorldMapDemo() {
           {
             start: { lat: 59.3293, lng: 18.0686 }, // Estocolmo, Suecia
             end: { lat: 52.5200, lng: 13.4050 }, // Berlín, Alemania
+          },
+          // Conexión EEUU - Europa
+          {
+            start: { lat: 40.7128, lng: -74.0060 }, // Nueva York, EEUU
+            end: { lat: 40.4168, lng: -3.7038 }, // Madrid, España
+          },
+          // Conexión Argentina - Europa
+          {
+            start: { lat: -34.6037, lng: -58.3816 }, // Buenos Aires, Argentina
+            end: { lat: 40.4168, lng: -3.7038 }, // Madrid, España
+          },
+          // Conexión Argentina - EEUU
+          {
+            start: { lat: -34.6037, lng: -58.3816 }, // Buenos Aires, Argentina
+            end: { lat: 40.7128, lng: -74.0060 }, // Nueva York, EEUU
           },
         ]}
         lineColor="#FFD700"
