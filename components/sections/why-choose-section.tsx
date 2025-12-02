@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useCallback } from "react"
+import { useRef, useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { LightRays } from "@/components/ui/light-rays"
 import { useScrollSnap } from "@/hooks/use-scroll-snap"
@@ -18,10 +18,43 @@ const VIDEO_SOURCES = [
 export default function WhyChooseSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+  const [videosReady, setVideosReady] = useState<boolean[]>(Array(6).fill(false))
   const { t } = useTranslation()
 
   // Aplicar scroll snap
   useScrollSnap(sectionRef)
+
+  // Precargar videos cuando la sección esté cerca del viewport
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Precargar todos los videos
+          videoRefs.current.forEach((video, index) => {
+            if (video) {
+              video.load()
+              // Marcar como listo cuando tenga datos suficientes
+              video.addEventListener('loadeddata', () => {
+                setVideosReady(prev => {
+                  const newState = [...prev]
+                  newState[index] = true
+                  return newState
+                })
+              }, { once: true })
+            }
+          })
+          observer.disconnect()
+        }
+      },
+      { rootMargin: "300px" } // Empezar a cargar 300px antes de que sea visible
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
 
   const handleMouseEnter = useCallback((index: number) => {
     const video = videoRefs.current[index]
@@ -190,17 +223,25 @@ export default function WhyChooseSection() {
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={() => handleMouseLeave(index)}
             >
-              {/* Video de fondo para cada bento */}
+              {/* Video de fondo para cada bento - preload="metadata" carga el primer frame */}
               <video
                 ref={(el) => { videoRefs.current[index] = el }}
                 loop
                 muted
                 playsInline
-                preload="none"
-                className="absolute inset-0 w-full h-full object-cover"
+                preload="metadata"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${videosReady[index] ? 'opacity-100' : 'opacity-0'}`}
               >
                 <source src={VIDEO_SOURCES[index]} type="video/mp4" />
               </video>
+              
+              {/* Placeholder gradient mientras carga el video */}
+              <div 
+                className={`absolute inset-0 transition-opacity duration-500 ${videosReady[index] ? 'opacity-0' : 'opacity-100'}`}
+                style={{
+                  background: "linear-gradient(135deg, #1d3969 0%, #2563eb 100%)",
+                }}
+              />
               
               {/* Overlay con gradiente sutil para todas las tarjetas */}
               <div 

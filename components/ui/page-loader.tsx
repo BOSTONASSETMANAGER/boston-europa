@@ -14,12 +14,37 @@ function getCookie(name: string): string | null {
   return null
 }
 
+// Videos a precargar durante el loading inicial
+const PRELOAD_VIDEOS = [
+  "/expertos.mp4",
+  "/mercados.mp4", 
+  "/asesoramiento.mp4",
+  "/alianzas.mp4",
+  "/regulacion.mp4",
+  "/rendimiento.mp4",
+]
+
+// Función para precargar videos en segundo plano
+function preloadVideos() {
+  PRELOAD_VIDEOS.forEach(src => {
+    const video = document.createElement('video')
+    video.preload = 'auto'
+    video.src = src
+    video.load()
+  })
+}
+
 export default function PageLoader() {
   const [isLoading, setIsLoading] = useState(true)
   const [showCountrySelector, setShowCountrySelector] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null)
   const [isReady, setIsReady] = useState(false)
   const { i18n } = useTranslation()
+
+  // Precargar videos inmediatamente al montar el componente
+  useEffect(() => {
+    preloadVideos()
+  }, [])
 
   useEffect(() => {
     // 1. Verificar si hay idioma definido por dominio (cookie del middleware)
