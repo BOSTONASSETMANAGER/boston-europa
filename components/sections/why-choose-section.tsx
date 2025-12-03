@@ -2,8 +2,8 @@
 
 import { useRef, useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { LightRays } from "@/components/ui/light-rays"
 import { useScrollSnap } from "@/hooks/use-scroll-snap"
+import { useDevicePerformance } from "@/hooks/use-device-performance"
 
 // Videos locales optimizados
 const VIDEO_SOURCES = [
@@ -20,12 +20,16 @@ export default function WhyChooseSection() {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const [videosReady, setVideosReady] = useState<boolean[]>(Array(6).fill(false))
   const { t } = useTranslation()
+  const { isLowEnd } = useDevicePerformance()
 
   // Aplicar scroll snap
   useScrollSnap(sectionRef)
 
-  // Precargar videos cuando la sección esté cerca del viewport
+  // Precargar videos solo en dispositivos de alto rendimiento
   useEffect(() => {
+    // En dispositivos de bajo rendimiento, no cargar videos
+    if (isLowEnd) return
+
     const section = sectionRef.current
     if (!section) return
 
@@ -54,22 +58,24 @@ export default function WhyChooseSection() {
 
     observer.observe(section)
     return () => observer.disconnect()
-  }, [])
+  }, [isLowEnd])
 
   const handleMouseEnter = useCallback((index: number) => {
+    if (isLowEnd) return // No reproducir videos en dispositivos de bajo rendimiento
     const video = videoRefs.current[index]
     if (video) {
       video.play().catch(() => {})
     }
-  }, [])
+  }, [isLowEnd])
 
   const handleMouseLeave = useCallback((index: number) => {
+    if (isLowEnd) return
     const video = videoRefs.current[index]
     if (video) {
       video.pause()
       video.currentTime = 0
     }
-  }, [])
+  }, [isLowEnd])
   const features = [
     {
       title: t('whyChoose.feature1.title'),
@@ -191,7 +197,6 @@ export default function WhyChooseSection() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <LightRays />
       {/* Capa de gradiente para atenuar el SVG */}
       <div 
         className="absolute inset-0 pointer-events-none"
@@ -223,21 +228,23 @@ export default function WhyChooseSection() {
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={() => handleMouseLeave(index)}
             >
-              {/* Video de fondo para cada bento - preload="metadata" carga el primer frame */}
-              <video
-                ref={(el) => { videoRefs.current[index] = el }}
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${videosReady[index] ? 'opacity-100' : 'opacity-0'}`}
-              >
-                <source src={VIDEO_SOURCES[index]} type="video/mp4" />
-              </video>
+              {/* Video de fondo - solo en dispositivos de alto rendimiento */}
+              {!isLowEnd && (
+                <video
+                  ref={(el) => { videoRefs.current[index] = el }}
+                  loop
+                  muted
+                  playsInline
+                  preload="none"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${videosReady[index] ? 'opacity-100' : 'opacity-0'}`}
+                >
+                  <source src={VIDEO_SOURCES[index]} type="video/mp4" />
+                </video>
+              )}
               
-              {/* Placeholder gradient mientras carga el video */}
+              {/* Placeholder gradient - siempre visible en low-end, transición en high-end */}
               <div 
-                className={`absolute inset-0 transition-opacity duration-500 ${videosReady[index] ? 'opacity-0' : 'opacity-100'}`}
+                className={`absolute inset-0 transition-opacity duration-500 ${!isLowEnd && videosReady[index] ? 'opacity-0' : 'opacity-100'}`}
                 style={{
                   background: "linear-gradient(135deg, #1d3969 0%, #2563eb 100%)",
                 }}

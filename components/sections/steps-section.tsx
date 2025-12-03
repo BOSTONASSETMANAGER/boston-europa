@@ -1,45 +1,65 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useEffect, useRef, useState } from "react"
 import { useScrollSnap } from "@/hooks/use-scroll-snap"
 import { useTranslation } from "react-i18next"
+import { useDevicePerformance } from "@/hooks/use-device-performance"
 
-gsap.registerPlugin(ScrollTrigger)
+// Lazy load GSAP solo cuando se necesita
+let gsapInstance: any = null
+let scrollTriggerInstance: any = null
+
+const loadGSAP = async () => {
+  if (gsapInstance && scrollTriggerInstance) {
+    return { gsap: gsapInstance, ScrollTrigger: scrollTriggerInstance }
+  }
+  const { gsap } = await import("gsap")
+  const { ScrollTrigger } = await import("gsap/ScrollTrigger")
+  gsap.registerPlugin(ScrollTrigger)
+  gsapInstance = gsap
+  scrollTriggerInstance = ScrollTrigger
+  return { gsap, ScrollTrigger }
+}
 
 export default function StepsSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const { t } = useTranslation()
+  const { isLowEnd } = useDevicePerformance()
 
   // Aplicar scroll snap
   useScrollSnap(sectionRef)
 
   useEffect(() => {
-    if (!sectionRef.current) return
+    // En dispositivos de bajo rendimiento, no usar animaciones GSAP
+    if (isLowEnd || !sectionRef.current) return
 
     const section = sectionRef.current
+    let ctx: any
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        section,
-        {
-          scale: 0.85,
-        },
-        {
-          scale: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: "top bottom",
-            end: "top top",
-            scrub: 1,
-          },
-        }
-      )
+    // Cargar GSAP de forma asíncrona
+    loadGSAP().then((modules) => {
+      if (!modules) return
+      const { gsap } = modules
+
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          section,
+          { scale: 0.85 },
+          {
+            scale: 1,
+            scrollTrigger: {
+              trigger: section,
+              start: "top bottom",
+              end: "top top",
+              scrub: 1,
+            },
+          }
+        )
+      })
     })
 
-    return () => ctx.revert()
-  }, [])
+    return () => ctx?.revert()
+  }, [isLowEnd])
 
   const steps = [
     {

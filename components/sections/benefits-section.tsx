@@ -1,7 +1,6 @@
 "use client"
 
 import { useRef } from "react"
-import { LightRays } from "@/components/ui/light-rays"
 import { useScrollSnap } from "@/hooks/use-scroll-snap"
 import { useTranslation } from "react-i18next"
 import { AnimatedBeamDemo } from "@/components/ui/animated-beam-demo"
@@ -42,7 +41,6 @@ export default function BenefitsSection() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <LightRays />
       {/* Capa de gradiente para atenuar el SVG */}
       <div 
         className="absolute inset-0 pointer-events-none"

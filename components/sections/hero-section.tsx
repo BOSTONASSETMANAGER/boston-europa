@@ -1,16 +1,22 @@
 "use client"
-import { useEffect, useRef, memo } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useScrollSnap } from "@/hooks/use-scroll-snap"
 import { useTranslation } from "react-i18next"
+import { useDevicePerformance } from "@/hooks/use-device-performance"
 
 // Lazy load GSAP solo cuando se necesita
-let gsapLoaded = false
+let gsapInstance: any = null
+let scrollTriggerInstance: any = null
+
 const loadGSAP = async () => {
-  if (gsapLoaded) return
+  if (gsapInstance && scrollTriggerInstance) {
+    return { gsap: gsapInstance, ScrollTrigger: scrollTriggerInstance }
+  }
   const { gsap } = await import("gsap")
   const { ScrollTrigger } = await import("gsap/ScrollTrigger")
   gsap.registerPlugin(ScrollTrigger)
-  gsapLoaded = true
+  gsapInstance = gsap
+  scrollTriggerInstance = ScrollTrigger
   return { gsap, ScrollTrigger }
 }
 
@@ -18,12 +24,14 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
+  const { isLowEnd } = useDevicePerformance()
 
   // Aplicar scroll snap
   useScrollSnap(sectionRef)
 
   useEffect(() => {
-    if (!sectionRef.current || !contentRef.current) return
+    // En dispositivos de bajo rendimiento, no usar animaciones GSAP
+    if (isLowEnd || !sectionRef.current || !contentRef.current) return
 
     const section = sectionRef.current
     const content = contentRef.current
@@ -65,7 +73,7 @@ export default function HeroSection() {
     })
 
     return () => ctx?.revert()
-  }, [])
+  }, [isLowEnd])
 
   return (
     <section
@@ -77,18 +85,30 @@ export default function HeroSection() {
       }}
     >
       <div className="absolute inset-0 w-full h-full">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          className="w-full h-full object-cover"
-          style={{ opacity: 0.6 }}
-          poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%231d3969' width='1' height='1'/%3E%3C/svg%3E"
-        >
-          <source src="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com/10081.mp4" type="video/mp4" />
-        </video>
+        {/* Video solo en dispositivos de alto rendimiento */}
+        {!isLowEnd ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover"
+            style={{ opacity: 0.6 }}
+            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%231d3969' width='1' height='1'/%3E%3C/svg%3E"
+          >
+            <source src="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com/10081.mp4" type="video/mp4" />
+          </video>
+        ) : (
+          /* Fallback estático para dispositivos low-end */
+          <div 
+            className="w-full h-full"
+            style={{
+              background: "linear-gradient(135deg, #1d3969 0%, #2563eb 50%, #1d3969 100%)",
+              opacity: 0.8,
+            }}
+          />
+        )}
         <div 
           className="absolute inset-0 w-full h-full pointer-events-none"
           style={{
