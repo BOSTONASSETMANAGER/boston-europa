@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useTranslation } from "react-i18next"
 import StaggeredMenu from "@/components/ui/staggered-menu"
+import { isCountryDomain, getDomainForLanguage } from "@/lib/domain-utils"
 
 export default function Navbar() {
   const [menuColor, setMenuColor] = useState("#ffffff")
@@ -80,6 +81,17 @@ export default function Navbar() {
     console.log('Changing language to:', language)
     console.log('Current language:', i18n.language)
     
+    // Si estamos en un dominio específico de país, redirigir al dominio del nuevo idioma
+    if (isCountryDomain()) {
+      const targetDomain = getDomainForLanguage(language)
+      if (targetDomain) {
+        const currentPath = window.location.pathname
+        window.location.href = `https://${targetDomain}${currentPath}`
+        return
+      }
+    }
+    
+    // En dominio base (.eu, localhost), cambiar idioma dinámicamente
     i18n.changeLanguage(language).then(() => {
       console.log('Language changed successfully to:', language)
       sessionStorage.setItem("selectedLanguage", language)
