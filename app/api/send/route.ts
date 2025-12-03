@@ -1,10 +1,20 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { NextRequest, NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Configuración SMTP de Hostinger
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+  port: parseInt(process.env.SMTP_PORT || '465'),
+  secure: true, // true para puerto 465, false para otros puertos
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
 // Email de destino para recibir los formularios
-const CONTACT_EMAIL = 'contacto@bostonassetmanager.com';
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'contacto@bostonassetmanager.com';
+const FROM_EMAIL = process.env.SMTP_USER || 'noreply@bostonam.eu';
 
 interface ContactFormData {
   type: 'contact' | 'exterior' | 'ue';
@@ -108,23 +118,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: emailData, error } = await resend.emails.send({
-      from: 'Boston Asset Manager <onboarding@resend.dev>',
-      to: [CONTACT_EMAIL],
+    const mailOptions = {
+      from: `Boston Asset Manager <${FROM_EMAIL}>`,
+      to: CONTACT_EMAIL,
       replyTo: data.email,
       subject: getEmailSubject(data),
       html: getEmailHtml(data),
-    });
+    };
 
-    if (error) {
-      console.error('Error enviando email:', error);
-      return NextResponse.json(
-        { error: 'Error al enviar el mensaje' },
-        { status: 500 }
-      );
-    }
+    const info = await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ success: true, id: emailData?.id });
+    return NextResponse.json({ success: true, id: info.messageId });
   } catch (error) {
     console.error('Error en API de contacto:', error);
     return NextResponse.json(

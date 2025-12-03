@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { useTranslation } from "react-i18next"
 import { WordRotate } from "./word-rotate"
+import Image from "next/image"
 
 interface Country {
   code: string
@@ -59,101 +60,36 @@ export default function CountrySelector({ onSelect }: { onSelect: (language: str
     }, 500)
   }
 
-  useEffect(() => {
-    const scriptUrl = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.35/dist/unicornStudio.umd.js"
-    
-    // Función para inicializar Unicorn Studio
-    const initUnicorn = () => {
-      // @ts-ignore
-      if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-        // @ts-ignore
-        window.UnicornStudio.init()
-        // @ts-ignore
-        window.UnicornStudio.isInitialized = true
-      }
-    }
-
-    // Check if script is already present (precargado por GSAPPreloader)
-    if (document.querySelector(`script[src="${scriptUrl}"]`)) {
-      // @ts-ignore
-      if (window.UnicornStudio) {
-        initUnicorn()
-      } else {
-        // Script está cargando, esperar a que termine
-        const checkInterval = setInterval(() => {
-          // @ts-ignore
-          if (window.UnicornStudio) {
-            initUnicorn()
-            clearInterval(checkInterval)
-          }
-        }, 50)
-        // Limpiar después de 5 segundos
-        setTimeout(() => clearInterval(checkInterval), 5000)
-      }
-      return
-    }
-
-    // Fallback: cargar script si no fue precargado
-    const script = document.createElement("script")
-    script.src = scriptUrl
-    script.async = true
-    script.onload = initUnicorn
-    document.head.appendChild(script)
-  }, [])
-
-  // Force remove badge via JS interval
-  useEffect(() => {
-    const removeBadge = () => {
-      const links = document.querySelectorAll('a');
-      links.forEach(link => {
-        if (
-          link.href.includes('unicorn.studio') || 
-          link.textContent?.toLowerCase().includes('made with unicorn.studio')
-        ) {
-          link.style.display = 'none';
-          link.style.setProperty('display', 'none', 'important');
-          link.style.visibility = 'hidden';
-          link.style.opacity = '0';
-          link.style.pointerEvents = 'none';
-        }
-      });
-    };
-
-    // Run frequently at start then slower
-    removeBadge();
-    const fastInterval = setInterval(removeBadge, 100);
-    const slowTimeout = setTimeout(() => {
-      clearInterval(fastInterval);
-      setInterval(removeBadge, 1000);
-    }, 5000);
-
-    return () => {
-      clearInterval(fastInterval);
-      clearTimeout(slowTimeout);
-    }
-  }, [])
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
         className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
         style={{
-          background: "black", // Fallback
+          background: "linear-gradient(135deg, #1d3969, #0f172a)", // Gradiente como fallback inmediato
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Unicorn Studio Background */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-           <div 
-             data-us-project="7KWfZDdazgHxIcuwvQlG"
-             style={{
-               transform: 'scale(1.2) translateY(5%)',
-             }}
-           ></div>
-        </div>
+        {/* Background Image optimizada con next/image */}
+        <Image
+          src="/BG-SELECTOR1.jpg"
+          alt="Background"
+          fill
+          priority
+          quality={50}
+          sizes="100vw"
+          className="object-cover z-0"
+        />
+        {/* Overlay para mejorar legibilidad */}
+        <div 
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            background: 'linear-gradient(135deg, rgba(29, 57, 105, 0.7), rgba(0, 0, 0, 0.5))',
+          }}
+        />
         
         <div className="text-center max-w-5xl px-4 relative z-10">
           <motion.div
