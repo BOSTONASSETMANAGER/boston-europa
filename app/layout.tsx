@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import PageLoader from "@/components/ui/page-loader"
 import PageTransition from "@/components/ui/page-transition"
 import { I18nProvider } from "@/components/providers/i18n-provider"
@@ -94,6 +95,7 @@ export default function RootLayout({
             {children}
           </PageTransition>
           <Analytics />
+          <SpeedInsights />
         </I18nProvider>
       </body>
     </html>
