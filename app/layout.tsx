@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import PageLoader from "@/components/ui/page-loader"
 import PageTransition from "@/components/ui/page-transition"
 import { I18nProvider } from "@/components/providers/i18n-provider"
+import { GSAPPreloader } from "@/components/providers/gsap-preloader"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -90,6 +91,7 @@ export default function RootLayout({
     <html lang="es">
       <body className={`font-sans antialiased`}>
         <I18nProvider>
+          <GSAPPreloader />
           <PageLoader />
           <PageTransition>
             {children}
