@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { m, AnimatePresence, LazyMotion, domAnimation } from "motion/react"
 import { useTranslation } from "react-i18next"
 import CountrySelector from "./country-selector"
 
@@ -14,24 +14,13 @@ function getCookie(name: string): string | null {
   return null
 }
 
-// Videos a precargar durante el loading inicial
-const PRELOAD_VIDEOS = [
-  "/expertos.mp4",
-  "/mercados.mp4", 
-  "/asesoramiento.mp4",
-  "/alianzas.mp4",
-  "/regulacion.mp4",
-  "/rendimiento.mp4",
-]
-
-// Función para precargar videos en segundo plano
-function preloadVideos() {
-  PRELOAD_VIDEOS.forEach(src => {
-    const video = document.createElement('video')
-    video.preload = 'auto'
-    video.src = src
-    video.load()
-  })
+// Función para detectar dispositivo de bajo rendimiento (versión síncrona para uso inmediato)
+function isLowEndDevice(): boolean {
+  if (typeof window === 'undefined') return false
+  const memory = (navigator as any).deviceMemory || 8
+  const cores = navigator.hardwareConcurrency || 8
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return prefersReducedMotion || memory <= 4 || cores <= 4
 }
 
 export default function PageLoader() {
@@ -41,10 +30,8 @@ export default function PageLoader() {
   const [isReady, setIsReady] = useState(false)
   const { i18n } = useTranslation()
 
-  // Precargar videos inmediatamente al montar el componente
-  useEffect(() => {
-    preloadVideos()
-  }, [])
+  // Ya no precargamos videos - se cargan bajo demanda en WhyChooseSection
+  // Solo en dispositivos de alto rendimiento
 
   useEffect(() => {
     // 1. Verificar si hay idioma definido por dominio (cookie del middleware)
@@ -120,10 +107,10 @@ export default function PageLoader() {
   }
 
   return (
-    <>
+    <LazyMotion features={domAnimation}>
       <AnimatePresence mode="wait">
         {isLoading && (
-          <motion.div
+          <m.div
             className="fixed inset-0 z-[9999] flex items-center justify-center"
             style={{
               background: "linear-gradient(135deg, var(--saas-primary), var(--saas-accent))",
@@ -133,7 +120,7 @@ export default function PageLoader() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
             <div className="text-center">
-              <motion.img
+              <m.img
                 src="https://bostonam.ar/wp-content/uploads/2023/03/LOGOWEBSITE-e1680142400144.png"
                 alt="Boston Asset Manager"
                 className="w-48 h-auto mb-8"
@@ -141,14 +128,14 @@ export default function PageLoader() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />
-              <motion.div
+              <m.div
                 className="flex gap-2 justify-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
                 {[0, 1, 2].map((i) => (
-                  <motion.div
+                  <m.div
                     key={i}
                     className="w-3 h-3 rounded-full bg-white"
                     animate={{
@@ -161,15 +148,15 @@ export default function PageLoader() {
                     }}
                   />
                 ))}
-              </motion.div>
+              </m.div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       {showCountrySelector && !selectedLanguage && (
         <CountrySelector onSelect={handleCountrySelect} />
       )}
-    </>
+    </LazyMotion>
   )
 }

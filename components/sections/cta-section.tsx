@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef } from "react"
-import { LightRays } from "@/components/ui/light-rays"
+import Link from "next/link"
 import { useScrollSnap } from "@/hooks/use-scroll-snap"
 import WorldMapDemo from "@/components/ui/world-map-demo"
 import { useTranslation } from "react-i18next"
@@ -24,7 +24,6 @@ export default function CtaSection() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <LightRays />
       {/* Capa de gradiente para atenuar el SVG */}
       <div 
         className="absolute inset-0 pointer-events-none"
@@ -46,8 +45,9 @@ export default function CtaSection() {
         <p className="text-lg mb-8" style={{ color: "rgba(255, 255, 255, 0.9)" }}>
           {t('cta.subtitle')}
         </p>
-        <button
-          className="text-white font-bold py-3 px-8 rounded-lg transition-all hover:-translate-y-1"
+        <Link
+          href="/contacto"
+          className="inline-block text-white font-bold py-3 px-8 rounded-lg transition-all hover:-translate-y-1"
           style={{
             background: "white",
             color: "var(--saas-primary)",
@@ -55,7 +55,7 @@ export default function CtaSection() {
           }}
         >
           {t('cta.button')}
-        </button>
+        </Link>
       </div>
     </section>
   )
