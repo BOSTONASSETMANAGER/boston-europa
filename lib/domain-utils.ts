@@ -43,7 +43,17 @@ export function redirectToDomain(language: string, useRedirect: boolean = false)
 export function isCountryDomain(): boolean {
   if (typeof window === 'undefined') return false
   const hostname = window.location.hostname
-  return Object.values(languageToDomain).includes(hostname)
+  
+  // Lista de todos los dominios de país (con y sin www)
+  const countryDomains = [
+    'bostonam.de', 'www.bostonam.de', 'bostonassetmanager.de', 'www.bostonassetmanager.de',
+    'bostonam.es', 'www.bostonam.es', 'bostonassetmanager.es', 'www.bostonassetmanager.es',
+    'bostonam.fr', 'www.bostonam.fr', 'bostonassetmanager.fr', 'www.bostonassetmanager.fr',
+    'bostonam.it', 'www.bostonam.it', 'bostonassetmanager.it', 'www.bostonassetmanager.it',
+    'bostonam.se', 'www.bostonam.se', 'bostonassetmanager.se', 'www.bostonassetmanager.se',
+  ]
+  
+  return countryDomains.includes(hostname)
 }
 
 /**
