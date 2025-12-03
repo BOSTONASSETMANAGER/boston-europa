@@ -79,11 +79,11 @@ export function useScrollSnap(sectionRef: RefObject<HTMLElement | null>) {
         if (targetSection) {
           loadGSAP().then((gsap) => {
             gsap.to(window, {
-              duration: 0.8,
+              duration: 1,
               scrollTo: { y: targetSection, offsetY: 0 },
-              ease: "power2.out",
+              ease: "power2.inOut",
               onComplete: () => {
-                setTimeout(() => { isScrolling = false }, 300)
+                setTimeout(() => { isScrolling = false }, 500)
               },
             })
           }).catch(() => {
