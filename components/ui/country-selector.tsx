@@ -62,35 +62,43 @@ export default function CountrySelector({ onSelect }: { onSelect: (language: str
   useEffect(() => {
     const scriptUrl = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.35/dist/unicornStudio.umd.js"
     
-    // Check if script is already present
-    if (document.querySelector(`script[src="${scriptUrl}"]`)) {
+    // Función para inicializar Unicorn Studio
+    const initUnicorn = () => {
       // @ts-ignore
       if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-         // @ts-ignore
-         UnicornStudio.init()
-         // @ts-ignore
-         window.UnicornStudio.isInitialized = true
-      }
-      return
-    }
-
-    const script = document.createElement("script")
-    script.src = scriptUrl
-    script.async = true
-    script.onload = function() {
-      // @ts-ignore
-      if (!window.UnicornStudio.isInitialized) {
         // @ts-ignore
-        UnicornStudio.init()
+        window.UnicornStudio.init()
         // @ts-ignore
         window.UnicornStudio.isInitialized = true
       }
     }
-    document.head.appendChild(script)
 
-    return () => {
-      // Optional: cleanup if needed, but usually scripts stay
+    // Check if script is already present (precargado por GSAPPreloader)
+    if (document.querySelector(`script[src="${scriptUrl}"]`)) {
+      // @ts-ignore
+      if (window.UnicornStudio) {
+        initUnicorn()
+      } else {
+        // Script está cargando, esperar a que termine
+        const checkInterval = setInterval(() => {
+          // @ts-ignore
+          if (window.UnicornStudio) {
+            initUnicorn()
+            clearInterval(checkInterval)
+          }
+        }, 50)
+        // Limpiar después de 5 segundos
+        setTimeout(() => clearInterval(checkInterval), 5000)
+      }
+      return
     }
+
+    // Fallback: cargar script si no fue precargado
+    const script = document.createElement("script")
+    script.src = scriptUrl
+    script.async = true
+    script.onload = initUnicorn
+    document.head.appendChild(script)
   }, [])
 
   // Force remove badge via JS interval
