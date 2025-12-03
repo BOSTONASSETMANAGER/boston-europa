@@ -14,6 +14,42 @@ function getCookie(name: string): string | null {
   return null
 }
 
+// Mapeo de dominios a idiomas (debe coincidir con middleware.ts)
+const domainToLanguage: Record<string, string> = {
+  // Alemania
+  'bostonam.de': 'de',
+  'www.bostonam.de': 'de',
+  'bostonassetmanager.de': 'de',
+  'www.bostonassetmanager.de': 'de',
+  // España
+  'bostonam.es': 'es',
+  'www.bostonam.es': 'es',
+  'bostonassetmanager.es': 'es',
+  'www.bostonassetmanager.es': 'es',
+  // Francia
+  'bostonam.fr': 'fr',
+  'www.bostonam.fr': 'fr',
+  'bostonassetmanager.fr': 'fr',
+  'www.bostonassetmanager.fr': 'fr',
+  // Italia
+  'bostonam.it': 'it',
+  'www.bostonam.it': 'it',
+  'bostonassetmanager.it': 'it',
+  'www.bostonassetmanager.it': 'it',
+  // Suecia
+  'bostonam.se': 'sv',
+  'www.bostonam.se': 'sv',
+  'bostonassetmanager.se': 'sv',
+  'www.bostonassetmanager.se': 'sv',
+}
+
+// Detectar idioma por dominio directamente
+function getLanguageFromDomain(): string | null {
+  if (typeof window === 'undefined') return null
+  const hostname = window.location.hostname
+  return domainToLanguage[hostname] || null
+}
+
 // Función para detectar dispositivo de bajo rendimiento (versión síncrona para uso inmediato)
 function isLowEndDevice(): boolean {
   if (typeof window === 'undefined') return false
@@ -34,12 +70,11 @@ export default function PageLoader() {
   // Solo en dispositivos de alto rendimiento
 
   useEffect(() => {
-    // 1. Verificar si hay idioma definido por dominio (cookie del middleware)
-    const domainLanguage = getCookie('domain-language')
-    const skipSelector = getCookie('skip-country-selector')
+    // 1. Detectar idioma por dominio directamente (más confiable que cookies)
+    const domainLanguage = getLanguageFromDomain()
     
-    // Si el dominio define un idioma específico (no selector), usarlo directamente
-    if (domainLanguage && domainLanguage !== 'selector' && skipSelector === 'true') {
+    // Si el dominio define un idioma específico, usarlo directamente sin mostrar selector
+    if (domainLanguage) {
       i18n.changeLanguage(domainLanguage)
       sessionStorage.setItem("selectedLanguage", domainLanguage)
       localStorage.setItem("selectedLanguage", domainLanguage)
@@ -49,7 +84,21 @@ export default function PageLoader() {
       return
     }
     
-    // 2. Verificar si ya se seleccionó un idioma en esta sesión
+    // 2. Verificar cookies del middleware como fallback
+    const cookieLanguage = getCookie('domain-language')
+    const skipSelector = getCookie('skip-country-selector')
+    
+    if (cookieLanguage && cookieLanguage !== 'selector' && skipSelector === 'true') {
+      i18n.changeLanguage(cookieLanguage)
+      sessionStorage.setItem("selectedLanguage", cookieLanguage)
+      localStorage.setItem("selectedLanguage", cookieLanguage)
+      setSelectedLanguage(cookieLanguage)
+      setIsReady(true)
+      setIsLoading(false)
+      return
+    }
+    
+    // 3. Verificar si ya se seleccionó un idioma en esta sesión
     const sessionLanguage = sessionStorage.getItem("selectedLanguage")
     
     if (sessionLanguage) {
@@ -58,7 +107,7 @@ export default function PageLoader() {
       setIsReady(true)
       setIsLoading(false)
     } else {
-      // Primera carga o recarga completa, mostrar preloader y selector
+      // Primera carga en dominio .eu o localhost, mostrar preloader y selector
       const timer = setTimeout(() => {
         setIsLoading(false)
         setShowCountrySelector(true)

@@ -10,30 +10,56 @@ import type { NextRequest } from 'next/server'
 
 // Mapeo de dominios a idiomas (inline para evitar problemas de importación en middleware)
 const domainToLanguage: Record<string, string> = {
-  // Dominios cortos
+  // Alemania
   'bostonam.de': 'de',
-  'bostonam.es': 'es',
-  'bostonam.fr': 'fr',
-  'bostonam.it': 'it',
-  'bostonam.se': 'sv',
-  
-  // Dominios largos
+  'www.bostonam.de': 'de',
   'bostonassetmanager.de': 'de',
+  'www.bostonassetmanager.de': 'de',
+  
+  // España
+  'bostonam.es': 'es',
+  'www.bostonam.es': 'es',
   'bostonassetmanager.es': 'es',
+  'www.bostonassetmanager.es': 'es',
+  
+  // Francia
+  'bostonam.fr': 'fr',
+  'www.bostonam.fr': 'fr',
   'bostonassetmanager.fr': 'fr',
+  'www.bostonassetmanager.fr': 'fr',
+  
+  // Italia
+  'bostonam.it': 'it',
+  'www.bostonam.it': 'it',
   'bostonassetmanager.it': 'it',
+  'www.bostonassetmanager.it': 'it',
+  
+  // Suecia
+  'bostonam.se': 'sv',
+  'www.bostonam.se': 'sv',
   'bostonassetmanager.se': 'sv',
+  'www.bostonassetmanager.se': 'sv',
   
   // Dominio base (selector de países)
   'bostonam.eu': 'selector',
+  'www.bostonam.eu': 'selector',
   'bostonassetmanager.eu': 'selector',
+  'www.bostonassetmanager.eu': 'selector',
   
-  // Desarrollo local - puedes cambiar esto para probar diferentes idiomas
+  // Vercel y desarrollo
+  'bostoneuropa.vercel.app': 'selector',
   'localhost': 'selector',
 }
 
 // Dominios que muestran el selector de países
-const selectorDomains = ['bostonam.eu', 'bostonassetmanager.eu', 'localhost']
+const selectorDomains = [
+  'bostonam.eu', 
+  'www.bostonam.eu',
+  'bostonassetmanager.eu', 
+  'www.bostonassetmanager.eu',
+  'bostoneuropa.vercel.app',
+  'localhost'
+]
 
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || ''
