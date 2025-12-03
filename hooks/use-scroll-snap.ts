@@ -2,11 +2,16 @@
 
 import { useEffect, RefObject, useState } from "react"
 
-// Lazy load GSAP solo cuando se necesita
+// Usar GSAP precargado o cargarlo lazy
 let gsapInstance: any = null
 
 const loadGSAP = async () => {
+  // Verificar si ya fue precargado globalmente
+  if (typeof window !== "undefined" && (window as any).__GSAP__) {
+    return (window as any).__GSAP__
+  }
   if (gsapInstance) return gsapInstance
+  
   const { gsap } = await import("gsap")
   const { ScrollToPlugin } = await import("gsap/ScrollToPlugin")
   gsap.registerPlugin(ScrollToPlugin)
@@ -38,70 +43,75 @@ export function useScrollSnap(sectionRef: RefObject<HTMLElement | null>) {
     let scrollTimeout: NodeJS.Timeout | null = null
     const SCROLL_THRESHOLD = 50 // Umbral mínimo para activar el snap
 
+    // Cache de valores para evitar reflows
+    let cachedSectionTop = section.offsetTop
+    let cachedSectionHeight = section.offsetHeight
+    let rafId: number | null = null
+    let pendingDeltaY = 0
+
+    // Actualizar cache en resize
+    const updateCache = () => {
+      cachedSectionTop = section.offsetTop
+      cachedSectionHeight = section.offsetHeight
+    }
+    window.addEventListener("resize", updateCache, { passive: true })
+
+    const processScroll = () => {
+      rafId = null
+      if (isScrolling) return
+
+      const scrollTop = window.scrollY
+      const viewportHeight = window.innerHeight
+      const sectionBottom = cachedSectionTop + cachedSectionHeight
+
+      const isInSection = scrollTop >= cachedSectionTop - viewportHeight / 2 && 
+                          scrollTop < sectionBottom - viewportHeight / 2
+
+      if (isInSection && Math.abs(scrollAccumulator) > SCROLL_THRESHOLD) {
+        isScrolling = true
+        const direction = scrollAccumulator > 0 ? 1 : -1
+        scrollAccumulator = 0
+
+        const targetSection = direction > 0 
+          ? section.nextElementSibling 
+          : section.previousElementSibling
+
+        if (targetSection) {
+          loadGSAP().then((gsap) => {
+            gsap.to(window, {
+              duration: 0.8,
+              scrollTo: { y: targetSection, offsetY: 0 },
+              ease: "power2.out",
+              onComplete: () => {
+                setTimeout(() => { isScrolling = false }, 300)
+              },
+            })
+          }).catch(() => {
+            (targetSection as HTMLElement).scrollIntoView({ behavior: 'smooth' })
+            isScrolling = false
+          })
+        } else {
+          isScrolling = false
+        }
+      }
+    }
+
     const handleWheel = (e: WheelEvent) => {
       if (isScrolling) return
 
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      const sectionTop = section.offsetTop
-      const sectionBottom = sectionTop + section.offsetHeight
-      const viewportHeight = window.innerHeight
+      // Acumular delta sin bloquear
+      scrollAccumulator += e.deltaY
+      pendingDeltaY = e.deltaY
 
-      // Verificar si estamos dentro de la sección actual
-      const isInSection = scrollTop >= sectionTop - viewportHeight / 2 && scrollTop < sectionBottom - viewportHeight / 2
+      if (scrollTimeout) clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => { scrollAccumulator = 0 }, 150)
 
-      if (isInSection) {
-        // Acumular el scroll para evitar cambios bruscos
-        scrollAccumulator += e.deltaY
-
-        // Limpiar timeout anterior
-        if (scrollTimeout) {
-          clearTimeout(scrollTimeout)
-        }
-
-        // Esperar a que el usuario termine de scrollear
-        scrollTimeout = setTimeout(() => {
-          scrollAccumulator = 0
-        }, 150)
-
-        // Solo activar si superamos el umbral
-        if (Math.abs(scrollAccumulator) > SCROLL_THRESHOLD) {
-          e.preventDefault()
-          isScrolling = true
-
-          let targetSection: Element | null = null
-
-          if (scrollAccumulator > 0) {
-            // Scroll hacia abajo - siguiente sección
-            targetSection = section.nextElementSibling
-          } else if (scrollAccumulator < 0) {
-            // Scroll hacia arriba - sección anterior
-            targetSection = section.previousElementSibling
-          }
-
-          // Reset acumulador
-          scrollAccumulator = 0
-
-          if (targetSection) {
-            // Cargar GSAP de forma asíncrona y ejecutar animación
-            loadGSAP().then((gsap) => {
-              gsap.to(window, {
-                duration: 1,
-                scrollTo: { y: targetSection, offsetY: 0 },
-                ease: "power2.inOut",
-                onComplete: () => {
-                  setTimeout(() => {
-                    isScrolling = false
-                  }, 500)
-                },
-              })
-            }).catch(() => {
-              // Fallback: scroll nativo si GSAP falla
-              (targetSection as HTMLElement).scrollIntoView({ behavior: 'smooth' })
-              isScrolling = false
-            })
-          } else {
-            isScrolling = false
-          }
+      // Verificar umbral antes de preventDefault
+      if (Math.abs(scrollAccumulator) > SCROLL_THRESHOLD) {
+        e.preventDefault()
+        // Diferir procesamiento al siguiente frame
+        if (!rafId) {
+          rafId = requestAnimationFrame(processScroll)
         }
       }
     }

@@ -4,11 +4,17 @@ import { useScrollSnap } from "@/hooks/use-scroll-snap"
 import { useTranslation } from "react-i18next"
 import { useDevicePerformance } from "@/hooks/use-device-performance"
 
-// Lazy load GSAP solo cuando se necesita
+// Usar GSAP precargado o cargarlo lazy
 let gsapInstance: any = null
 let scrollTriggerInstance: any = null
 
 const loadGSAP = async () => {
+  // Verificar si ya fue precargado globalmente
+  if (typeof window !== "undefined" && (window as any).__GSAP__) {
+    const gsap = (window as any).__GSAP__
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger")
+    return { gsap, ScrollTrigger }
+  }
   if (gsapInstance && scrollTriggerInstance) {
     return { gsap: gsapInstance, ScrollTrigger: scrollTriggerInstance }
   }
