@@ -9,8 +9,16 @@ import { I18nProvider } from "@/components/providers/i18n-provider"
 import { GSAPPreloader } from "@/components/providers/gsap-preloader"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geistSans = Geist({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist-sans",
+})
+const geistMono = Geist_Mono({ 
+  subsets: ["latin"],
+  display: "swap", 
+  variable: "--font-geist-mono",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bostonam.eu"),
@@ -89,7 +97,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`font-sans antialiased`}>
+      <head>
+        {/* Preconnect para recursos externos críticos */}
+        <link rel="preconnect" href="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com" />
+        <link rel="dns-prefetch" href="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com" />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
         <I18nProvider>
           <GSAPPreloader />
           <PageLoader />

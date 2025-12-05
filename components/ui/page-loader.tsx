@@ -111,7 +111,7 @@ export default function PageLoader() {
       const timer = setTimeout(() => {
         setIsLoading(false)
         setShowCountrySelector(true)
-      }, 2000)
+      }, 800)
 
       return () => clearTimeout(timer)
     }
@@ -170,7 +170,7 @@ export default function PageLoader() {
           >
             <div className="text-center">
               <m.img
-                src="https://bostonam.ar/wp-content/uploads/2023/03/LOGOWEBSITE-e1680142400144.png"
+                src="/boston blanco.png"
                 alt="Boston Asset Manager"
                 className="w-48 h-auto mb-8"
                 initial={{ scale: 0.8, opacity: 0 }}

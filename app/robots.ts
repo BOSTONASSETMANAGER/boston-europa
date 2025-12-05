@@ -6,6 +6,18 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
+        disallow: [
+          '/cropped-*',
+          '/*-png',
+          '/*-jpg',
+          '/*-jpeg',
+          '/bostonamlogo*',
+          '/enlace-*',
+          '/optionsschein',
+          '/anlegerprofil',
+          '/lentreprise',
+          '/regulations',
+        ],
       },
     ],
     sitemap: [

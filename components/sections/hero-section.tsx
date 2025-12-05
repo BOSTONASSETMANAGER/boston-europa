@@ -26,6 +26,59 @@ const loadGSAP = async () => {
   return { gsap, ScrollTrigger }
 }
 
+// Componente de video lazy - solo carga cuando es visible
+function LazyVideo({ isLowEnd }: { isLowEnd: boolean }) {
+  const [shouldLoad, setShouldLoad] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    // Cargar video después de un pequeño delay para no bloquear FCP
+    const timer = setTimeout(() => {
+      setShouldLoad(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    // Intentar reproducir cuando el video esté listo
+    if (shouldLoad && videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Silenciar error si autoplay falla
+      })
+    }
+  }, [shouldLoad])
+
+  if (isLowEnd) {
+    return (
+      <div 
+        className="w-full h-full"
+        style={{
+          background: "linear-gradient(135deg, #1d3969 0%, #2563eb 50%, #1d3969 100%)",
+          opacity: 0.8,
+        }}
+      />
+    )
+  }
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="none"
+      className="w-full h-full object-cover"
+      style={{ opacity: shouldLoad ? 0.6 : 0 }}
+      poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%231d3969' width='1' height='1'/%3E%3C/svg%3E"
+    >
+      {shouldLoad && (
+        <source src="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com/10081.mp4" type="video/mp4" />
+      )}
+    </video>
+  )
+}
+
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -91,30 +144,8 @@ export default function HeroSection() {
       }}
     >
       <div className="absolute inset-0 w-full h-full">
-        {/* Video solo en dispositivos de alto rendimiento */}
-        {!isLowEnd ? (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-cover"
-            style={{ opacity: 0.6 }}
-            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect fill='%231d3969' width='1' height='1'/%3E%3C/svg%3E"
-          >
-            <source src="https://sjjamnou5h3qi4bf.public.blob.vercel-storage.com/10081.mp4" type="video/mp4" />
-          </video>
-        ) : (
-          /* Fallback estático para dispositivos low-end */
-          <div 
-            className="w-full h-full"
-            style={{
-              background: "linear-gradient(135deg, #1d3969 0%, #2563eb 50%, #1d3969 100%)",
-              opacity: 0.8,
-            }}
-          />
-        )}
+        {/* Video lazy loading para no bloquear FCP */}
+        <LazyVideo isLowEnd={isLowEnd} />
         <div 
           className="absolute inset-0 w-full h-full pointer-events-none"
           style={{
